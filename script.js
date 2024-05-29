@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
             new Chart(ctx, {
                 type: 'pie',
                 data: {
-                    labels: ['Only ROMA groups', 'ROMA and RN groups', 'Only RN groups'],
+                    labels: ['State 0', 'State 1', 'State 2'],
                     datasets: [{
                         data: [stateCounts[0], stateCounts[1], stateCounts[2]],
                         backgroundColor: ['red', 'yellow', 'green']
@@ -44,4 +44,29 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         })
         .catch(error => console.error('Error fetching data:', error));
+
+    document.getElementById('triggerAction').addEventListener('click', function() {
+        const token = 'XXXXX';
+        const repo = 'joaoprsantos/data_viz';
+        const workflowId = 'trigger-action.yml';
+
+        fetch(`https://api.github.com/repos/${repo}/actions/workflows/${workflowId}/dispatches`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            },
+            body: JSON.stringify({
+                ref: 'main' // or the branch you want to trigger the workflow on
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('GitHub Action triggered successfully!');
+            } else {
+                alert('Failed to trigger GitHub Action.');
+            }
+        })
+        .catch(error => console.error('Error triggering GitHub Action:', error));
+    });
 });
